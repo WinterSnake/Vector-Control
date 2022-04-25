@@ -1,3 +1,7 @@
+/*
+    TextEngine
+    - Vector
+*/
 #pragma once
 #include <cstdint>
 
@@ -7,13 +11,6 @@ namespace Engine
     {
         // Properties
         public:
-            union
-            {
-                uint32_t x, width;
-            };
-            union
-            {
-                uint32_t y, height;
-            };
+            uint32_t x, y;
     };
 }
