@@ -23,6 +23,7 @@ namespace Engine
             Vector2 Get_Size();
             Vector2 Get_Mouse_Position();
             void    Set_Mouse_Position(Vector2);
+            void    Clear_Screen();
         /* Static Methods */
         public:
             static Window Init_Screen();

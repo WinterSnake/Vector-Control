@@ -2,7 +2,7 @@
     TextEngine
     - UNIX Terminal Window
 */
-#include <stdio.h>
+#include <iostream>
 #include <sys/ioctl.h>
 #include <string>
 #include "engine/window.hpp"
@@ -17,7 +17,6 @@
 #define MOUSE_SAVE   "\x1B 7\x1B[s"
 #define MOUSE_LOAD   "\x1B 8\x1B[u"
 #define MOUSE_RESET  "\x1B[H"
-#define BUFFER 10
 
 namespace Engine
 {
@@ -30,12 +29,11 @@ namespace Engine
     }
     Vector2 Window::Get_Mouse_Position()
     {
-        bool parse = true;
         int c, index = 0;
-        char buffer[BUFFER] = {0};
+        char buffer[10] = {0};
         Vector2 position;
-        printf(MOUSE_GET);
-        while (parse)
+        std::cout << MOUSE_GET;
+        while (index >= 0)
         {
             c = getchar();
             switch(c)
@@ -49,7 +47,7 @@ namespace Engine
                     continue;
                 case 'R':
                     position.x = std::stoul(buffer);
-                    parse = false;
+                    index = -1;
                     break;
                 default:
                     buffer[index++] = (char)c;
@@ -59,7 +57,11 @@ namespace Engine
     }
     void Window::Set_Mouse_Position(Vector2 position)
     {
-        printf("\x1B[%u;%uH", position.y, position.x);
+        std::cout << "\x1B[" << position.y << ';' << position.x << 'H';
+    }
+    void Window::Clear_Screen()
+    {
+        std::cout << SCREEN_CLEAR << MOUSE_RESET;
     }
     /* Static Methods */
     Window Window::Init_Screen()
@@ -69,17 +71,17 @@ namespace Engine
         ioctl(0, TIOCGWINSZ, &window);
         // Terminal Attributes
         tcgetattr(STDOUT, &Window::term);
-        Window::term.c_lflag &= ~ECHO & ~ICANON;
+        Window::term.c_lflag &= ~(ECHO | ICANON);
         tcsetattr(STDOUT, TCSANOW, &Window::term);
         // Terminal State
-        printf(MOUSE_SAVE SCREEN_SAVE SCREEN_CLEAR MOUSE_RESET);
-        return Window(Vector2{.width=window.ws_col, .height=window.ws_row});
+        std::cout << MOUSE_SAVE << SCREEN_SAVE << SCREEN_CLEAR << MOUSE_RESET;
+        return Window(Vector2{.x=window.ws_col, .y=window.ws_row});
     }
     void Window::End_Screen()
     {
         Window::term.c_lflag |= ECHO | ICANON;
         tcsetattr(STDOUT, TCSANOW, &Window::term);
-        printf(SCREEN_LOAD MOUSE_LOAD);
+        std::cout << SCREEN_LOAD << MOUSE_LOAD;
     }
     /* Properties */
     struct termios Window::term;
