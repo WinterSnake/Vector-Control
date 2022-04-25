@@ -7,6 +7,13 @@ namespace Engine
     {
         // Properties
         public:
-            uint32_t x = 0, y = 0;
+            union
+            {
+                uint32_t x, width;
+            };
+            union
+            {
+                uint32_t y, height;
+            };
     };
 }

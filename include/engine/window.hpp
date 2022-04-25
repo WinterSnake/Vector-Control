@@ -8,12 +8,19 @@
 
 namespace Engine
 {
+    struct Color
+    {
+        uint8_t red, green, blue;
+    };
+
     class Window
     {
         /* Constructor / Deconstructor */
         private:
             Window(Vector2);
         /* Instance Methods */
+        public:
+            Vector2 Get_Size();
         /* Static Methods */
         public:
             static Window Init_Screen();
