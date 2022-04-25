@@ -21,6 +21,8 @@ namespace Engine
         /* Instance Methods */
         public:
             Vector2 Get_Size();
+            Vector2 Get_Mouse_Position();
+            void    Set_Mouse_Position(Vector2);
         /* Static Methods */
         public:
             static Window Init_Screen();
