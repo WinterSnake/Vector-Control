@@ -23,6 +23,10 @@ namespace Engine
     /* Constructor / Deconstructor */
     Window::Window(Vector2 size): _size(size) {}
     /* Instance Methods */
+    void Window::Clear_Screen()
+    {
+        std::cout << SCREEN_CLEAR << MOUSE_RESET;
+    }
     Vector2 Window::Get_Size()
     {
         return _size;
@@ -55,13 +59,13 @@ namespace Engine
         }
         return position;
     }
+    void Window::Reset_Mouse_Position()
+    {
+        std::cout << MOUSE_RESET;
+    }
     void Window::Set_Mouse_Position(Vector2 position)
     {
         std::cout << "\x1B[" << position.y << ';' << position.x << 'H';
-    }
-    void Window::Clear_Screen()
-    {
-        std::cout << SCREEN_CLEAR << MOUSE_RESET;
     }
     /* Static Methods */
     Window Window::Init_Screen()
@@ -70,19 +74,19 @@ namespace Engine
         struct winsize window;
         ioctl(0, TIOCGWINSZ, &window);
         // Terminal Attributes
-        tcgetattr(STDOUT, &Window::term);
-        Window::term.c_lflag &= ~(ECHO | ICANON);
-        tcsetattr(STDOUT, TCSANOW, &Window::term);
+        tcgetattr(STDOUT, &Window::_term);
+        Window::_term.c_lflag &= ~(ECHO | ICANON);
+        tcsetattr(STDOUT, TCSANOW, &Window::_term);
         // Terminal State
         std::cout << MOUSE_SAVE << SCREEN_SAVE << SCREEN_CLEAR << MOUSE_RESET;
         return Window(Vector2{.x=window.ws_col, .y=window.ws_row});
     }
     void Window::End_Screen()
     {
-        Window::term.c_lflag |= ECHO | ICANON;
-        tcsetattr(STDOUT, TCSANOW, &Window::term);
+        Window::_term.c_lflag |= ECHO | ICANON;
+        tcsetattr(STDOUT, TCSANOW, &Window::_term);
         std::cout << SCREEN_LOAD << MOUSE_LOAD;
     }
     /* Properties */
-    struct termios Window::term;
+    struct termios Window::_term;
 }
