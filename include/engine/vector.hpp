@@ -13,4 +13,10 @@ namespace Engine
         public:
             uint32_t x, y;
     };
+    struct IVector2
+    {
+        // Properties
+        public:
+            int32_t x, y;
+    };
 }
