@@ -15,6 +15,7 @@
 #define SCREEN_SAVE  "\x1B[?47h"
 #define SCREEN_LOAD  "\x1B[?47l"
 #define SCREEN_CLEAR "\x1B[2J"
+#define SCREEN_RESET "\x1B[0m"
 #define MOUSE_GET    "\x1B[6n"
 #define MOUSE_SAVE   "\x1B 7\x1B[s"
 #define MOUSE_LOAD   "\x1B 8\x1B[u"
@@ -229,7 +230,7 @@ namespace Engine
     {
         Window::_term.c_lflag |= ECHO | ICANON;
         tcsetattr(STDOUT, TCSANOW, &Window::_term);
-        std::cout << SCREEN_LOAD << MOUSE_LOAD << MOUSE_SHOW;
+        std::cout << SCREEN_RESET << SCREEN_LOAD << MOUSE_LOAD << MOUSE_SHOW;
     }
     /* Properties */
     struct termios Window::_term;
