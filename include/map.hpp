@@ -3,6 +3,8 @@
     - Map System
 */
 #pragma once
+#include <vector>
+#include "engine/window.hpp"
 #include "engine/vector.hpp"
 
 enum class TILE
@@ -11,7 +13,16 @@ enum class TILE
     GRASS,
     WATER,
 };
-
+class Object
+{
+    /* Instance Methods */
+    public:
+        virtual void update();
+        virtual void draw(Engine::Window);
+    /* Properties */
+    private:
+        Engine::Vector2 _position;
+};
 class Map
 {
     /* Constructor / Deconstructor */
@@ -27,7 +38,8 @@ class Map
         static Map Generate(Engine::Vector2);
     /* Properties */
     public:
-        TILE**          tile;
+        TILE**              tile;
     private:
-        Engine::Vector2 _size;
+        Engine::Vector2     _size;
+        std::vector<Object> _objects;
 };
